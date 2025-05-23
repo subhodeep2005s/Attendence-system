@@ -34,7 +34,7 @@ export function StudentProfile({ student }: StudentProfileProps) {
           </Avatar>
           <div className="text-center">
             <h3 className="text-xl font-semibold">{student.name}</h3>
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-black/70">
               {student.department}, Semester {student.semester}
             </p>
           </div>
@@ -50,53 +50,53 @@ export function StudentProfile({ student }: StudentProfileProps) {
 
         <div className="mt-4 space-y-4">
           <div className="flex items-start gap-2">
-            <User2 className="mt-0.5 h-4 w-4 text-slate-500" />
+            <User2 className="mt-0.5 h-4 w-4 text-black/70" />
             <div>
               <p className="text-sm font-medium">Roll Number / ID</p>
-              <p className="text-sm text-slate-500">{student.rollNumber}</p>
+              <p className="text-sm text-black/70">{student.rollNumber}</p>
             </div>
           </div>
 
           <div className="flex items-start gap-2">
-            <Mail className="mt-0.5 h-4 w-4 text-slate-500" />
+            <Mail className="mt-0.5 h-4 w-4 text-black/70" />
             <div>
               <p className="text-sm font-medium">Email Address</p>
-              <p className="text-sm text-slate-500">{student.email}</p>
+              <p className="text-sm text-black/70">{student.email}</p>
             </div>
           </div>
 
           <div className="flex items-start gap-2">
-            <Phone className="mt-0.5 h-4 w-4 text-slate-500" />
+            <Phone className="mt-0.5 h-4 w-4 text-black/70" />
             <div>
               <p className="text-sm font-medium">Phone Number</p>
-              <p className="text-sm text-slate-500">{student.phone}</p>
+              <p className="text-sm text-black/70">{student.phone}</p>
             </div>
           </div>
 
           <div className="flex items-start gap-2">
-            <Calendar className="mt-0.5 h-4 w-4 text-slate-500" />
+            <Calendar className="mt-0.5 h-4 w-4 text-black/70" />
             <div>
               <p className="text-sm font-medium">Date of Birth</p>
-              <p className="text-sm text-slate-500">{new Date(student.dob).toLocaleDateString()}</p>
+              <p className="text-sm text-black/70">{new Date(student.dob).toLocaleDateString()}</p>
             </div>
           </div>
 
           <div className="flex items-start gap-2">
-            <Phone className="mt-0.5 h-4 w-4 text-slate-500" />
+            <Phone className="mt-0.5 h-4 w-4 text-black/70" />
             <div>
               <p className="text-sm font-medium">Parent/Guardian Contact</p>
-              <p className="text-sm text-slate-500">{student.guardianContact}</p>
+              <p className="text-sm text-black/70">{student.guardianContact}</p>
             </div>
           </div>
 
           <div className="pt-2">
             <div className="flex items-center justify-between">
               <p className="text-sm font-medium">Attendance Statistics</p>
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-black/70">
                 {student.daysPresent} / {student.totalDays} days
               </p>
             </div>
-            <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-slate-200">
+            <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-neutral-100">
               <div
                 className={`h-full ${attendancePercentage >= 75 ? "bg-green-500" : "bg-amber-500"}`}
                 style={{ width: `${attendancePercentage}%` }}

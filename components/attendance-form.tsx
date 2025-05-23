@@ -76,26 +76,37 @@ export function AttendanceForm() {
 
       // Filter by search query
       if (searchQuery) {
-        const query = searchQuery.toLowerCase()
+        const query = searchQuery.toLowerCase().trim()
         result = result.filter(
           (student) => 
-            student.name?.toLowerCase().includes(query) || 
-            student.rollNumber?.toLowerCase().includes(query)
+            (student.name?.toLowerCase().includes(query) || 
+            student.rollNumber?.toLowerCase().includes(query)) &&
+            !markedStudents.has(student._id.toString())
         )
       }
 
       // Filter by department
       if (department !== "all") {
-        result = result.filter((student) => student.department === department)
+        result = result.filter(
+          (student) => 
+            student.department === department &&
+            !markedStudents.has(student._id.toString())
+        )
       }
 
       // Filter by semester
       if (semester !== "all") {
-        result = result.filter((student) => student.semester === semester)
+        result = result.filter(
+          (student) => 
+            student.semester === semester &&
+            !markedStudents.has(student._id.toString())
+        )
       }
 
-      // Filter out marked students
-      result = result.filter((student) => student._id && !markedStudents.has(student._id.toString()))
+      // If no filters are active, show all unmarked students
+      if (!searchQuery && department === "all" && semester === "all") {
+        result = students.filter(student => !markedStudents.has(student._id.toString()))
+      }
 
       setFilteredStudents(result)
     } catch (err) {
@@ -251,11 +262,23 @@ export function AttendanceForm() {
     }
   }
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value)
+  }
+
+  const handleDepartmentChange = (value: string) => {
+    setDepartment(value)
+  }
+
+  const handleSemesterChange = (value: string) => {
+    setSemester(value)
+  }
+
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Mark Attendance</CardTitle>
-        <Button variant="outline" size="sm" onClick={refreshStudentList} disabled={isLoading}>
+        <Button variant="outline" size="sm" onClick={refreshStudentList} disabled={isLoading} className="bg-white text-black border-neutral-200 hover:bg-neutral-50">
           <RefreshCw className={`mr-2 h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
           Refresh List
         </Button>
@@ -279,15 +302,15 @@ export function AttendanceForm() {
           <div className="flex flex-col gap-4 sm:flex-row">
             <div className="flex-1">
               <Label htmlFor="date">Date</Label>
-              <Input id="date" type="date" value={date} onChange={(e) => setDate(e.target.value)} className="mt-1" />
+              <Input id="date" type="date" value={date} onChange={(e) => setDate(e.target.value)} className="mt-1 bg-white text-black border-neutral-200" />
             </div>
             <div className="flex-1">
               <Label htmlFor="department">Department</Label>
-              <Select value={department} onValueChange={setDepartment}>
-                <SelectTrigger id="department" className="mt-1">
+              <Select value={department} onValueChange={handleDepartmentChange}>
+                <SelectTrigger id="department" className="mt-1 bg-white text-black border-neutral-200">
                   <SelectValue placeholder="All Departments" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-white text-black">
                   <SelectItem value="all">All Departments</SelectItem>
                   <SelectItem value="CSE">CSE</SelectItem>
                   <SelectItem value="Civil">Civil</SelectItem>
@@ -298,11 +321,11 @@ export function AttendanceForm() {
             </div>
             <div className="flex-1">
               <Label htmlFor="semester">Semester</Label>
-              <Select value={semester} onValueChange={setSemester}>
-                <SelectTrigger id="semester" className="mt-1">
+              <Select value={semester} onValueChange={handleSemesterChange}>
+                <SelectTrigger id="semester" className="mt-1 bg-white text-black border-neutral-200">
                   <SelectValue placeholder="All Semesters" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-white text-black">
                   <SelectItem value="all">All Semesters</SelectItem>
                   {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
                     <SelectItem key={sem} value={sem.toString()}>
@@ -315,24 +338,24 @@ export function AttendanceForm() {
           </div>
 
           <div className="relative">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-slate-500" />
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-black/50" />
             <Input
               placeholder="Search by name or roll number..."
-              className="pl-8"
+              className="pl-8 bg-white text-black border-neutral-200"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={handleSearchChange}
             />
           </div>
 
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <div className="text-sm text-slate-500">
+            <div className="text-sm text-black/70">
               Showing {filteredStudents.length} of {students.length} students pending attendance
             </div>
             <div className="flex gap-2">
-              <Button type="button" variant="outline" size="sm" onClick={markAllPresent}>
+              <Button type="button" variant="outline" size="sm" onClick={markAllPresent} className="bg-white text-black border-neutral-200 hover:bg-neutral-50">
                 Mark All Present
               </Button>
-              <Button type="button" variant="outline" size="sm" onClick={markAllAbsent}>
+              <Button type="button" variant="outline" size="sm" onClick={markAllAbsent} className="bg-white text-black border-neutral-200 hover:bg-neutral-50">
                 Mark All Absent
               </Button>
             </div>
@@ -342,26 +365,26 @@ export function AttendanceForm() {
         {isLoading ? (
           <div className="space-y-4">
             {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="flex animate-pulse items-center gap-4 rounded-lg border border-slate-200 p-4">
-                <div className="h-10 w-10 rounded-full bg-slate-200" />
+              <div key={i} className="flex animate-pulse items-center gap-4 rounded-lg border border-neutral-200 p-4">
+                <div className="h-10 w-10 rounded-full bg-neutral-100" />
                 <div className="flex-1 space-y-2">
-                  <div className="h-4 w-1/3 rounded bg-slate-200" />
-                  <div className="h-3 w-1/4 rounded bg-slate-200" />
+                  <div className="h-4 w-1/3 rounded bg-neutral-100" />
+                  <div className="h-3 w-1/4 rounded bg-neutral-100" />
                 </div>
-                <div className="h-6 w-12 rounded bg-slate-200" />
+                <div className="h-6 w-12 rounded bg-neutral-100" />
               </div>
             ))}
           </div>
         ) : filteredStudents.length === 0 ? (
-          <div className="rounded-lg border border-dashed border-slate-300 p-8 text-center">
+          <div className="rounded-lg border border-dashed border-neutral-200 p-8 text-center">
             <h3 className="text-lg font-medium">No students pending attendance</h3>
-            <p className="mt-1 text-sm text-slate-500">
+            <p className="mt-1 text-sm text-black/70">
               {students.length > 0
                 ? "All visible students have been marked for today."
                 : "Try adjusting your filters or search query."}
             </p>
             {students.length === 0 && (
-              <Button onClick={refreshStudentList} className="mt-4">
+              <Button onClick={refreshStudentList} className="mt-4 bg-white text-black border-neutral-200 hover:bg-neutral-50">
                 <RefreshCw className="mr-2 h-4 w-4" />
                 Refresh List
               </Button>
@@ -372,7 +395,7 @@ export function AttendanceForm() {
             {filteredStudents.map((student) => (
               <div
                 key={student._id.toString()}
-                className="flex items-center gap-4 rounded-lg border border-slate-200 p-4"
+                className="flex items-center gap-4 rounded-lg border border-neutral-200 p-4"
               >
                 <Avatar>
                   <AvatarImage src={student.profileImage || ""} alt={student.name} />
@@ -380,7 +403,7 @@ export function AttendanceForm() {
                 </Avatar>
                 <div className="flex-1 space-y-1">
                   <p className="font-medium">{student.name}</p>
-                  <p className="text-sm text-slate-500">
+                  <p className="text-sm text-black/70">
                     {student.rollNumber} | {student.department}, Semester {student.semester}
                   </p>
                 </div>
@@ -397,12 +420,14 @@ export function AttendanceForm() {
                     id={`attendance-${student._id}`}
                     checked={attendanceData[student._id.toString()] || false}
                     onCheckedChange={(checked) => handleAttendanceChange(student._id.toString(), checked)}
+                    className="data-[state=checked]:bg-neutral-900"
                   />
                   <Button
                     size="sm"
                     variant="outline"
                     onClick={() => handleMarkIndividual(student._id.toString())}
                     disabled={isSaving}
+                    className="bg-white text-black border-neutral-200 hover:bg-neutral-50"
                   >
                     Mark
                   </Button>
@@ -413,7 +438,7 @@ export function AttendanceForm() {
         )}
 
         <div className="mt-6 flex justify-end">
-          <Button onClick={handleSubmit} disabled={isLoading || isSaving || filteredStudents.length === 0}>
+          <Button onClick={handleSubmit} disabled={isLoading || isSaving || filteredStudents.length === 0} className="bg-white text-black border-neutral-200 hover:bg-neutral-50">
             {isSaving ? "Saving..." : "Save All Attendance"}
           </Button>
         </div>

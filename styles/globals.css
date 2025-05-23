@@ -4,6 +4,8 @@
 
 body {
   font-family: Arial, Helvetica, sans-serif;
+  background: #fff !important;
+  color: #111 !important;
 }
 
 @layer utilities {

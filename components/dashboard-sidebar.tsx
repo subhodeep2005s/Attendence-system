@@ -47,7 +47,7 @@ export function DashboardSidebar() {
     <Sidebar>
       <SidebarHeader className="border-b border-slate-200 p-4">
         <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-900 text-white">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-black border">
             <span className="text-sm font-bold">AT</span>
           </div>
           <div className="font-semibold">Attendance Tracker</div>

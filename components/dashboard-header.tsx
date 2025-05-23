@@ -23,8 +23,8 @@ export function DashboardHeader({
         </div>
       )}
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900">{title}</h1>
-        {description && <p className="mt-1 text-sm text-slate-500">{description}</p>}
+        <h1 className="text-2xl font-bold tracking-tight text-black">{title}</h1>
+        {description && <p className="mt-1 text-sm text-black/70">{description}</p>}
       </div>
     </div>
   )
